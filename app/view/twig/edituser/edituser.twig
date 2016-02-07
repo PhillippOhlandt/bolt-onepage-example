@@ -1,0 +1,46 @@
+{# Page: NavPrimary > Username ^ Profile || NavSecondary > Configuration > Users > Edit #}
+
+{% extends '_base/_page-nav.twig' %}
+
+{% block page_nav 'Settings/Configuration' %}
+
+{% block page_title %}
+    {% if context.kind == 'edit' %}
+        {{ __('page.edit-users.title.edit') }}
+    {% elseif context.kind == 'profile' %}
+        {{ __('page.edit-users.title.profile') }}
+    {% elseif context.kind == 'create' %}
+        {{ __('page.edit-users.title.create') }}
+    {% endif %}
+{% endblock page_title %}
+
+{% block page_subtitle %}
+    {% if context.kind == 'edit' or context.kind == 'profile' %}
+        {{ context.displayname }}
+    {% endif %}
+{% endblock page_subtitle %}
+
+{% block page_main %}
+
+    {% form_theme context.form 'form_bolt_layout.twig' %}
+
+    <div class="row">
+        <div class="col-xs-12">
+            {% if context.kind != 'profile' %}
+                <p style="max-width: 500px;">
+                    {% if context.kind == 'edit' %}
+                        {{ __('page.edit-users.user-edit') }}
+                    {% elseif context.kind == 'create' %}
+                        {{ __('page.edit-users.user-create') }}
+                    {% endif %}
+                </p>
+            {% endif %}
+
+            <form method="post" class="form-horizontal" role="form" autocomplete="off">
+                {{ form_widget(context.form) }}
+                <input type="submit" value="{{ __('page.edit-users.button.save') }}" name="submit" class="btn btn-primary">
+            </form>
+        </div>
+    </div>
+
+{% endblock page_main %}

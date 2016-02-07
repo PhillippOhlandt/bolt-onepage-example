@@ -1,0 +1,108 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<title>Document</title>
+	<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap.min.css" integrity="sha384-1q8mTJOASx8j1Au+a5WDVnPi2lkFfwwEAa8hDDdjZlpLegxhjVME1fgjWPGmkzs7" crossorigin="anonymous">
+	<link rel="stylesheet" href="{{ paths.theme }}style/style.css">
+</head>
+<body>
+
+<nav class="navbar navbar-default" style="margin-bottom: 0px;">
+  <div class="container-fluid">
+    <!-- Brand and toggle get grouped for better mobile display -->
+    <div class="navbar-header">
+      <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#bs-example-navbar-collapse-1" aria-expanded="false">
+        <span class="sr-only">Toggle navigation</span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+      </button>
+      <a class="navbar-brand" href="#">{{ app.config.get('general/sitename') }}</a>
+    </div>
+
+
+  </div><!-- /.container-fluid -->
+</nav>
+
+
+
+
+	{% set default_template = app.config.get('contenttypes/sections')['record_template'] %}
+
+	{% setcontent sections = 'sections' %}
+
+	{% for section in sections %}
+		{% if section.template is not empty %}
+			{% include section.template with {section: section} %}
+		{% else %}
+			{% include default_template with {section: section} %}
+		{% endif %}
+	{% endfor %}
+
+
+
+<footer style="background: #eee; padding-top: 10px;">
+	<!-- Origional snipet by msurguy<http://bootsnipp.com/msurguy>, I editted his snipet so that it works with bootstrap 3.3 -->
+	<div class="container">
+	    <div class="row">
+	            <div class="col-xs-3">
+	                <ul class="list-unstyled">
+	                    <li>GitHub<li>
+	                    <li><a href="#">About us</a></li>
+	                    <li><a href="#">Blog</a></li>
+	                    <li><a href="#">Contact & support</a></li>
+	                    <li><a href="#">Enterprise</a></li>
+	                    <li><a href="#">Site status</a></li>
+	                </ul>
+	            </div>
+	            <div class="col-xs-3">
+	                <ul class="list-unstyled">
+	                    <li>Applications<li>
+	                    <li><a href="#">Product for Mac</a></li>
+	                    <li><a href="#">Product for Windows</a></li>
+	                    <li><a href="#">Product for Eclipse</a></li>
+	                    <li><a href="#">Product mobile apps</a></li>
+	                </ul>
+	            </div>
+	            <div class="col-xs-3">
+	                <ul class="list-unstyled">
+	                    <li>Services<li>
+	                    <li><a href="#">Web analytics</a></li>
+	                    <li><a href="#">Presentations</a></li>
+	                    <li><a href="#">Code snippets</a></li>
+	                    <li><a href="#">Job board</a></li>
+	                </ul>
+	            </div>
+	            <div class="col-xs-3">
+	                <ul class="list-unstyled">
+	                    <li>Documentation<li>
+	                    <li><a href="#">Product Help</a></li>
+	                    <li><a href="#">Developer API</a></li>
+	                    <li><a href="#">Product Markdown</a></li>
+	                    <li><a href="#">Product Pages</a></li>
+	                </ul>
+	            </div>
+	    </div>
+	    <hr>
+	    <div class="row">
+	            <div class="col-xs-8">
+	                <ul class="list-unstyled list-inline pull-left">
+	                    <li><a href="#">Terms of Service</a></li>
+	                    <li><a href="#">Contact Us</a></li>
+	                    <li><a href="#">Privacy</a></li>
+	                </ul>
+	            </div>
+	            <div class="col-xs-4">
+	                <p class="text-muted pull-right">© 2015 Company Name. All rights reserved</p>
+	            </div>
+	        </div>
+	</div>
+</footer>
+
+
+<script src="//code.jquery.com/jquery-1.12.0.min.js"></script>
+<!-- Latest compiled and minified JavaScript -->
+<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/js/bootstrap.min.js" integrity="sha384-0mSbJDEHialfmuBBQP6A4Qrprq5OVfW37PRR3j5ELqxss1yVqOtnepnHVP9aJ7xS" crossorigin="anonymous"></script>
+</body>
+</html>

@@ -1,0 +1,131 @@
+<table class="dashboardlisting">
+    <thead>
+        <tr>
+            <th>{{ __('page.ckeditor-browse-server.files') }}</th>
+            <th class="hidden-xs hidden-sm">{{ __('page.ckeditor-browse-server.size') }}</th>
+            <th class="hidden-xs hidden-sm">{{ __('page.ckeditor-browse-server.modified') }}</th>
+            <th colspan="2"></th>
+        </tr>
+    </thead>
+
+    <tbody>
+        {% for file in context.files %}
+            <tr>
+                {# Column: Filename #}
+                <td>
+                    {% if file.type in ['jpeg', 'jpg', 'png', 'gif'] %}
+
+                        <i class="fa fa-fw fa-file-image-o"></i>
+
+                        {% if file.readable %}
+                            <a href="{{ file.newpath|thumbnail(1000, 1000, 'r') }}"
+                               class="magnific"
+                               title="Image: {{ file.filename }}">
+                                <b>{{ file.filename|excerpt(80)|shy }}</b>
+                            </a>
+                        {% else %}
+                            <b>{{ file.filename|excerpt(80)|shy }} </b>
+                            <i class="fa fa-lock"></i>
+                        {% endif %}
+
+                    {% elseif file.type in ['twig', 'txt', 'html', 'md', 'markdown', 'json', 'htm', 'scss', 'css', 'less', 'js', 'yml'] %}
+
+                        <i class="fa fa-fw fa-file-code-o"></i>
+
+                        {% if file.readable %}
+                            <a href="{{ path('fileedit', {'namespace': context.namespace, 'file': file.newpath}) }}">
+                                <b>{{ file.filename|excerpt(80)|shy }}</b>
+                            </a>
+                        {% else %}
+                            <b>{{ file.filename|excerpt(80)|shy }}</b>
+                        {% endif %}
+
+                        {% if not file.readable or not file.writable %}
+                            <i class="fa fa-lock"></i>
+                        {% endif %}
+
+                    {% else %}
+
+                        <i class="fa fa-fw fa-link"></i>
+
+                        {% if file.readable %}
+                            <a href="{{ file.url }}" target="_blank">
+                                <b>{{ file.filename|excerpt(80)|shy }}</b>
+                            </a>
+                        {% else %}
+                            <b>{{ file.filename|excerpt(80)|shy }} </b>
+                            <i class="fa fa-lock"></i>
+                        {% endif %}
+                    {% endif %}
+                </td>
+                {# Column: Filesize #}
+                <td style="min-width: 120px;" class="hidden-xs hidden-sm">
+                    {{ file.filesize }}.
+                    {% if file.imagesize is defined %}
+                       <br> {{ file.imagesize }} px.
+                    {% endif %}
+                </td>
+                {# Column: Modified #}
+                <td style="min-width: 140px;" class="hidden-xs hidden-sm">
+                    <time class="moment" datetime="{{ file.modified|date("c") }}" title="{{ file.modified }}">
+                        {{ file.modified }}
+                    </time>
+                </td>
+                {# Column: Thumbnail #}
+                <td class="listthumb">
+                    {% if file.imagesize is defined %}
+                        {% set thumb = file.newpath|showimage(54, 40, 'c') %}{# Hack to add alt attribute #}
+                        <img {{ thumb|slice(5, thumb|length - 6)|raw }} alt="{{ __('Thumbnail')|e('html_attr') }}">
+                    {% endif %}
+                </td>
+                {# Column: Actions #}
+                <td class="actions" style="min-width: 16px;">
+
+                    <div class="btn-group">
+
+                        {{ macro.stackbutton(file) }}
+
+                        {% if context.form != false %}
+                            <a class="btn dropdown-toggle btn-default btn-sm hidden-xs" data-toggle="dropdown">
+                                <i class="fa fa-info-circle"></i>
+                                {{ __('Options') }}
+                                <span class="caret"></span>
+                            </a>
+
+                            <ul class="dropdown-menu pull-right hidden-xs">
+                                <li>
+                                    <a href="#"
+                                       data-action="Bolt.files.renameFile('{{ context.namespace }}', '{{ file.path }}', '{{ file.filename }}', this);">
+
+                                        <i class="fa fa-keyboard-o"></i>
+                                        {{ __('Rename %foldername%', {'%foldername%': file.filename}) }}
+                                    </a>
+                                </li>
+                                <li>
+                                    <a href="#" data-action="Bolt.files.deleteFile('{{ context.namespace }}', '{{ file.newpath }}', this);">
+                                        <i class="fa fa-ban"></i>
+                                        {{ __('Delete %filename%', {'%filename%': file.filename}) }}
+                                    </a>
+                                </li>
+                                <li>
+                                    <a href="#" data-action="Bolt.files.duplicateFile('{{ context.namespace }}', '{{ file.newpath }}')">
+                                        <i class="fa fa-files-o"></i>
+                                        {{ __('Duplicate %filename%', {'%filename%': file.filename }) }}
+                                    </a>
+                                </li>
+                                <li class="divider"></li>
+                                <li>
+                                    <a class="nolink">
+                                        {{ __('Permissions') }}:
+                                        <strong><code>{{ file.permissions }}</code></strong>
+                                    </a>
+                                </li>
+                            </ul>
+                        {% endif %}
+                    </div>
+
+                </td>
+            </tr>
+        {% endfor %}
+    </tbody>
+</table>

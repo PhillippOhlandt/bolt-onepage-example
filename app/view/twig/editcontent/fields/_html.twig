@@ -1,0 +1,41 @@
+{#=== OPTIONS ========================================================================================================#}
+
+{% set option = {
+    class:     field.class|default(''),
+    height:    field.height|default(''),
+    label:     field.label|default(''),
+    required:  field.required|default(false),
+    errortext: field.error|default(''),
+    info:      field.info|default(''),
+    options:   field.options.ckeditor|default('')
+} %}
+
+{#=== INIT ===========================================================================================================#}
+
+{% set param = {} %}
+
+{% if option.height %}
+    {% set param = param|merge({height: option.height}) %}
+{% endif %}
+
+{% if option.options %}
+    {% set param = param|merge({ckeditor: option.options}) %}
+{% endif %}
+
+{% set attr_html = {
+    class:               option.class ~ ' ckeditor',
+    data_param:          param ? param|json_encode : '',
+    name:                name,
+    id:                  key,
+    required:            option.required,
+    data_errortext:      option.errortext
+} %}
+
+{#=== FIELDSET =======================================================================================================#}
+
+<fieldset class="html">
+    <div class="col-sm-12">
+        <label class="control-label">{{ (option.info) ? macro.infopop(labelkey, option.info) : labelkey }}</label>
+        <textarea{{ macro.attr(attr_html) }}>{{ context.content.get(contentkey)|default('') }}</textarea>
+    </div>
+</fieldset>

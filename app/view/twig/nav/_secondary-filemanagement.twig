@@ -1,0 +1,15 @@
+{% set sub = [
+    {
+        icon: 'fa:folder-open-o',
+        label: __('Uploaded files'),
+        link: path('files', {'namespace': 'files', 'path': ''}),
+        isallowed: 'files:uploads'
+    }, {
+        icon: 'fa:desktop',
+        label: __('View/edit Templates'),
+        link: path('files', {'namespace': 'theme', 'path': ''}),
+        isallowed: 'files:theme'
+    }
+] %}
+
+{{ nav.submenu('fa:folder-open', __('File Management'), sub, (page_nav == 'Settings/FileManagement')) }}

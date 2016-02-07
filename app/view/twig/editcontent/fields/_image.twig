@@ -1,0 +1,131 @@
+{#=== OPTIONS ========================================================================================================#}
+
+{% set option = {
+    class:       field.class|default(''),
+    label:       field.label|default(''),
+    extensions:  field.extensions|default([]),
+    attrib:      (field.attrib is defined and field.attrib is iterable) ? field.attrib : [ field.attrib|default(null) ],
+    upload:      field.upload|default(''),
+    can_upload:  field.canUpload,
+    info:        field.info|default('info.upload.image')
+} %}
+
+{#=== INIT ===========================================================================================================#}
+
+{% set preview_w = 200 %}
+{% set preview_h = 150 %}
+
+{# Convert from old stored image format that is used until re-saved #}
+{% set image = (context.content.get(contentkey) is iterable) ? context.content.get(contentkey) : {'file': context.content.get(contentkey)} %}
+
+{% set attr_inp = {
+    class:       option.class ~ ' imageinput wide',
+    id:          'field-' ~ key,
+    name:        name ~ '[file]',
+    type:        'text',
+    placeholder: __('field.general.allowed-filetypes') ~ ' ' ~ option.extensions|join(', ') ~ ' …',
+    value:       image.file|default(''),
+} %}
+
+{% set attr_upload = {
+    accept:       option.extensions ? '.' ~ option.extensions|join(',.') : '',
+    data_upload:  {type: 'Image', key: key, width: preview_w, height: preview_h}|json_encode(),
+    data_url:     url('upload', {'handler': option.upload}),
+    id:           'fileupload-' ~ key,
+    name:         'files[]',
+    type:         'file',
+} %}
+
+
+{#=== BLOCKS =========================================================================================================#}
+
+{% import _self as block %}
+
+{% macro imagepath(labelkey, option, image, attr_inp) %}
+    {% import '_macro/_macro.twig' as macro %}
+    {#  sbonardt: put this label as any other field in it's own place outside the div wrapper. More fine grained
+        control over positioning and alignment
+        <label class="control-label" style="min-width: 180px;">{{ macro.infopop(labelkey, option.info) }}</label>
+        note: the 'min-width: 180px;' is a bit of a nasty hack. if omitted, Chrome renders the
+        span 1px too small, making the 'info' popup go to the next line. #}
+    <label>{{ __('Path to image file') }}</label>
+    <input{{ macro.attr(attr_inp) }}>
+{% endmacro %}
+
+{% macro attributes(key, option, image) %}
+    {% if option.attrib %}
+        {% for attrib in option.attrib %}
+            {% if attrib|lower == 'title' %}
+                <div class="form-group">
+                    <div class="col-sm-2">
+                        <label for="{{ key }}[title]">{{ __('Title') }}</label>
+                    </div>
+                    <div class="col-sm-10">
+                        <input type="text" name="{{ key }}[title]" id="{{ key }}-title" value="{{ image.title|default('') }}" class="form-control">
+                    </div>
+                </div>
+            {% endif %}
+            {% if attrib|lower in ['alt text', 'alt'] %}
+                <div class="form-group">
+                    <div class="col-sm-2">
+                        <label for="{{ key }}[alt]">{{ __('Alt') }}</label>
+                    </div>
+                    <div class="col-sm-10">
+                        <input type="text" name="{{ key }}[alt]" id="{{ key }}-alt" value="{{ image.alt|default('') }}" class="form-control">
+                    </div>
+                </div>
+            {% endif %}
+        {% endfor %}
+    {% endif %}
+{% endmacro %}
+
+{% macro progress(key) %}
+    <div class="progress file-progress progress-striped active" id="progress-{{ key }}">
+        <div class="progress-bar" style="width: 0%;"></div>
+    </div>
+{% endmacro %}
+
+{# Modal "select from server" #}
+{% macro serverselect(key) %}
+    <div class="modal fade" id="selectModal-{{ key }}" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+        <div class="modal-dialog modal-lg">
+            <div class="modal-content"></div>
+        </div>
+    </div>
+{% endmacro %}
+
+{#=== FIELDSET =======================================================================================================#}
+
+<fieldset class="image">
+    <div class="dropzone clearfix" id="dropzone-{{ key }}">
+    <label class="col-xs-12 control-label">{{ macro.infopop(labelkey, option.info) }}</label>
+    <div class="col-xs-8">
+        <div class="form-group">
+            <div class="col-sm-12">
+                {{ block.imagepath(labelkey, option, image, attr_inp) }}
+            </div>
+        </div>
+        {{ block.attributes(key, option, image) }}
+        {% set can_upload = context.can_upload and option.can_upload %}
+        {{ macro.upload_buttons('image', key, attr_upload, option.upload, can_upload) }}
+        {{ block.progress(key) }}
+        {{ block.serverselect(key, __('Cancel')) }}
+    </div>
+
+    <div class="col-xs-4">
+        <div class="right-on-large">{# to make the preview align right on wide screens #}
+            <label>{{ __('Preview') }}</label>
+            <div class="content-preview imageholder" id="thumbnail-{{ key }}" style="max-width:{{ preview_w }}px;max-height:{{ preview_h }}px">
+                {% if context.content.get(contentkey) != '' %}
+                    {% set preview_path = image.file|thumbnail(preview_w, preview_h, 'c') %}
+                {% else %}
+                    {% set preview_path = app.paths.app ~ 'view/img/default_empty_4x3.png' %}
+                {% endif %}
+                {# <img src="{{ preview_path }}" width="{{ preview_w }}" height="{{ preview_h }}" alt="Preview"> #}
+                <img src="{{ preview_path }}" alt="Preview">
+            </div>
+        </div>
+    </div>
+</div>
+
+</fieldset>

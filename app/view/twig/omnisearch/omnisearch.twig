@@ -1,0 +1,62 @@
+{# Page: NavPrimary | NavSecondary > Omnisearch #}
+
+{% extends '_base/_page-nav.twig' %}
+
+{% block page_title __('Omnisearch') %}
+
+{% block page_main %}
+
+    <div class="row">
+        <div class="col-md-8">
+            <form method="get">
+                <div class="form-group">
+                    <div class="input-group">
+                    <input class="form-control" name="q" type="text" value="{{ context.query }}">
+                        <span class="input-group-btn">
+                            <button class="btn btn-default" type="submit"><i class="fa fa-search "></i> {{ __('Search') }}</button>
+                        </span>
+                    </div>
+                </div>
+            </form>
+
+            {% set has_results = false %}
+            {% if context.results %}
+                <table class="table table-striped dashboardlisting omnisearchlisting">
+                    <tbody>
+                        {% for item in context.results %}
+                            {% if (app.paths.bolt ~ 'omnisearch') not in item.path %}
+                            {% set has_results = true %}
+                            <tr>
+                                {% if item.record|default() %}
+                                    {% set content = item.record %}
+                                    {% set permissions = item.permissions %}
+                                    {% set modifiable = permissions.create or permissions.delete or permissions.publish or permissions.depublish %}
+                                    {% include 'omnisearch/_result.twig' with {'excerptlength': 280, 'thumbsize': 54, 'compact': true} %}
+                                {% else %}
+                                    <td colspan="4">
+                                        <a href="{{ item.path }}">{{ item.label|raw }}</a>
+                                    </td>
+                                {% endif %}
+                            </tr>
+                            {% endif %}
+                        {% endfor %}
+                    </tbody>
+                </table>
+                {# todo: pagination, limit, offset? #}
+            {% endif %}
+
+            {% if not has_results and context.query %}
+                <p>{{ __("No results found for '%search%'. Please try another search.", {'%search%': context.query|escape}) }}</p>
+            {% elseif not has_results %}
+                {# <p>Some default text here...</p> #}
+            {% endif %}
+
+        </div>
+
+        <aside class="col-md-4">
+            {% include 'omnisearch/_aside.twig' %}
+        </aside>
+
+    </div>
+
+{% endblock page_main %}

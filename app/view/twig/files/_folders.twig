@@ -1,0 +1,69 @@
+<table class="dashboardlisting">
+    <thead>
+        <tr>
+            <th>{{ __('Folders') }}</th>
+            <th colspan="2">{{ __('Modified') }}</th>
+        </tr>
+    </thead>
+
+    <tbody>
+        {% for folder in context.folders %}
+            <tr>
+                <td>
+                    <i class="fa fa-fw fa-folder-open-o"></i>
+                    <a href="{{ path('files', {'path': folder.newpath, 'namespace': context.namespace}) }}">
+                        <b>{{ folder.foldername|excerpt(60)|shy }}/</b>
+                    </a>
+                </td>
+                <td>
+                    <time class="moment" datetime="{{ folder.modified|date("c") }}" title="{{ folder.modified }}">
+                        {{ folder.modified }}
+                    </time>
+                </td>
+                <td class="actions">
+                {% if context.form != false %}
+                    <div class="btn-group">
+                    {% if folder.writable %}
+
+                        <a class="btn dropdown-toggle btn-default btn-sm" data-toggle="dropdown">
+                            <i class="fa fa-info-circle"></i>
+                            {{ __('Options') }}
+                            <span class="caret"></span>
+                        </a>
+
+                        <ul class="dropdown-menu pull-right">
+                            <li>
+                                <a href="#"
+                                   data-action="bolt.files.renameFolder('{{ context.namespace }}',
+                                                                    '{{ context.pathsegments|keys|last }}',
+                                                                    '{{ folder.foldername }}',
+                                                                    this);">
+
+                                    <i class="fa fa-keyboard-o"></i>
+                                    {{ __('Rename %foldername%', {'%foldername%': folder.foldername}) }}
+                                </a>
+                                <a href="#"
+                                   class="confirm"
+                                   data-action="bolt.files.deleteFolder('{{ context.namespace }}',
+                                                                    '{{ context.pathsegments|keys|last }}',
+                                                                    '{{ folder.foldername }}',
+                                                                    this);">
+
+                                    <i class="fa fa-ban"></i>
+                                    {{ __('Delete %foldername%', {'%foldername%': folder.foldername}) }}
+                                </a>
+                            </li>
+                        </ul>
+                    {% else %}
+                        <a class="btn btn-default btn-sm">
+                            <i class="fa fa-exclamation-circle"></i>
+                            {{ __('Folder permissions insufficient') }}
+                        </a>
+                    {% endif %}
+                    </div>
+                {% endif %}
+                </td>
+            </tr>
+        {% endfor %}
+    </tbody>
+</table>

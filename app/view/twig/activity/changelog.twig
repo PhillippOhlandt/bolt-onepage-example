@@ -1,0 +1,83 @@
+{# Page: NavSecondary > Dashboard > Configuration > Change Log #}
+
+{% extends '_base/_page-nav.twig' %}
+
+{% block page_nav 'Settings/Configuration' %}
+
+{% block page_title __('logs.change-log') %}
+
+{% block page_main %}
+
+    {% from '_macro/_pager.twig' import pager %}
+
+    {% import '_macro/_macro.twig' as macro %}
+
+    <div class="row">
+        <div class="col-xs-12">
+
+            <div class="btn-group pull-right" style="padding-bottom: 12px">
+                <a class="btn btn-default" href="{{ path('changelog', {'action': 'trim'}) }}">
+                    <i class="fa fa-trash-o"></i> {{ __('Trim Change Log') }}
+                </a>
+                <a class="btn btn-default confirm" href="{{ path('changelog', {'action': 'clear'}) }}" data-confirm="Are you sure you want to clear the change logs?">
+                    <i class="fa fa-trash"></i> {{ __('Clear Change Log') }}
+                </a>
+            </div>
+
+            <table class="table table-striped dashboardlisting">
+                <thead>
+                    <tr>
+                        <th></th>
+                        <th>Type</th>
+                        <th>Contenttype</th>
+                        <th>Title</th>
+                        <th>Fields</th>
+                        <th>Comment</th>
+                        <th>User</th>
+                        <th>Date</th>
+                    </tr>
+                </thead>
+                <tbody>
+                {% for entry in entries %}
+                    <tr>
+                        <td>
+                            № {{ entry.id }}
+                        </td>
+                        <td>
+                            {{ entry.mutation_type|title }}
+                        </td>
+                        <td>
+                            {{ entry.contenttype }}
+                        </td>
+                        <td>
+                            [{{ entry.contentid }}] {{ entry.title }}
+                        </td>
+                        <td>
+                            {{ entry.diff|keys|join(', ') }}
+                        </td>
+                        <td>
+                            {{ entry.comment|default('') }}
+                        </td>
+                        <td>
+                            {% set user = getuser(entry.ownerid) %}
+                            {% if user is not empty %}
+                                {% set userlink = macro.userlink(user) %}
+                            {% else %}
+                                {% set userlink = __('panel.latest-activity.unknown') %}
+                            {% endif %}
+                            <em>{{ userlink }}</em>
+                        </td>
+                        <td>
+                            <time class="moment" datetime="{{ entry.date|date("c") }}" title="{{ entry.date }}">{{ entry.date }}</time>
+                        </td>
+                    </tr>
+                {% endfor %}
+                </tbody>
+            </table>
+
+            {{ pager() }}
+
+        </div>
+    </div>
+
+{% endblock page_main %}

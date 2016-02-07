@@ -1,0 +1,19 @@
+{# Page: NavSecondary > Configuration > Clear the cache #}
+
+{% extends '_base/_page-nav.twig' %}
+
+{% block page_nav 'Settings/Configuration' %}
+
+{% block page_title __('Clear the cache') %}
+
+{% block page_main %}
+
+    <div class="row">
+        <div class="col-xs-12">
+            <p>
+                <a href="{{ path('clearcache') }}" class="btn btn-primary">{{ __('Clear cache again') }}</a>
+            </p>
+        </div>
+    </div>
+
+{% endblock page_main %}

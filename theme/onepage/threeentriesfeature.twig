@@ -1,0 +1,29 @@
+{% setcontent entry_1 = 'entries/' ~ section.templatefields.entry_1 %}
+{% setcontent entry_2 = 'entries/' ~ section.templatefields.entry_2 %}
+{% setcontent entry_3 = 'entries/' ~ section.templatefields.entry_3 %}
+
+<section style="padding-bottom: 20px;">
+	<div class="container">
+		<div class="row">
+			<div class="col-md-12">
+				<h2 class="text-center">{{ section.templatefields.headline }}</h2>
+			</div>
+		</div>
+		<div class="row">
+			<div class="col-md-4 div-col-sm-12">
+				<h3 class="text-center">{{ entry_1.title }}</h3>
+				{{ entry_1.teaser }}
+			</div>
+			<div class="col-md-4 div-col-sm-12">
+				<h3 class="text-center">{{ entry_2.title }}</h3>
+				{{ entry_2.teaser }}
+			</div>
+			<div class="col-md-4 div-col-sm-12">
+				<h3 class="text-center">{{ entry_3.title }}</h3>
+				{{ entry_3.teaser }}
+			</div>
+		</div>
+	</div>
+</section>
+
+

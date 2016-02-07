@@ -1,0 +1,27 @@
+#!/usr/bin/env bash
+# A little helper script to run BoltCMS on localhost (port 8000) using the PHP (>= v5.4) integrated web server,
+# sending the error log to a file named bolt.log, in the current directory, in case something goes wrong.
+
+# Usage:
+# Default behaviour:
+# $ ./serve
+# Custom behaviour:
+# $ ./serve my/document/root development.php
+
+# Known issues: 
+# Using the built-in webserver, you will _not_ be able to edit config.yml or .twig files,
+# because the built-in server chokes on the URL rewriting. This is a bug in PHP, which they
+# apparently do not intend to fix anytime soon. See: https://bugs.php.net/bug.php?id=67671
+
+DOCROOT="."
+POINT="index.php"
+
+if [ $1 ]; then
+  DOCROOT=$1
+fi
+
+if [ $2 ]; then
+  POINT=$2
+fi
+
+php -S localhost:8000 -t $DOCROOT $POINT 2>> bolt.log &

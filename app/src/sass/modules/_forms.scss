@@ -1,0 +1,175 @@
+/**
+ * Editing content
+ */
+
+
+label {
+    display: block;
+    margin-bottom: 3px;
+
+    label {
+        display: inline !important;
+    }
+}
+
+.form-control {
+    @include placeholder();
+    height: 33px;
+}
+
+.form-horizontal {
+    .control-label {
+        text-align: left;
+        font-size: $font-size-base + 1px;
+        font-weight: normal;
+        margin-bottom: 5px;
+
+        @include respond-to(medium-screens) {
+            @include old-ie() {
+                text-align: left !important; // sadly... : ( )
+                margin-bottom: 5px !important; // sadly... : ( )
+            }
+        }
+    }
+
+    .control-label-inline {
+        font-size: $font-size-base;
+        font-weight: bold;
+        margin-bottom: 5px;
+        padding-top: 4px;
+    }
+}
+
+.form-group {
+    margin-bottom: 20px;
+
+    .form-group {
+        margin-bottom: 10px;
+    }
+}
+
+.button-wrap {
+    margin: 8px 0 4px;
+    position: relative;
+
+    .btn {
+        margin: 0 4px 2px 0;
+    }
+}
+
+input[type="checkbox"] {
+    margin: 4px 8px 0px 0;
+}
+
+.prefix, .postfix {
+    padding-bottom: 4px;
+    color: #666;
+    padding-left: 16px;
+    padding-right: 16px;
+}
+
+.postfix {
+    padding-top: 5px;
+    padding-bottom: 0;
+}
+
+fieldset.checkbox {
+    display: inline-block;
+    margin-top: -12px;
+    margin-bottom: -12px;
+
+    label {
+        display: inline;
+    }
+
+    div {
+        margin: 0.3em 0 0.5em;
+    }
+}
+
+.file-progress {
+    width: 20%;
+    display: none;
+    margin-bottom: 0;
+}
+
+.uploading-list-element {
+    position: relative;
+
+    @include respond-to(mid-mobile) {
+        padding-right: 160px;
+    }
+
+    @include respond-to(medium-screens) {
+        padding-right: 210px;
+    }
+}
+
+.files-progress {
+    margin-bottom: 0;
+    height: 1em;
+
+    @include respond-to(mid-mobile) {
+        position: absolute;
+        right: 0;
+        top: 0;
+        width: 150px;
+    }
+
+    @include respond-to(medium-screens) {
+        width: 200px;
+    }
+}
+
+.fileinput-button {
+    margin-right: 4px;
+}
+
+.ui-sortable-helper {
+    border: 1px solid #999;
+    box-shadow: 6px 6px 0px rgba(0, 0, 0, 0.3);
+    opacity: 0.5;
+}
+
+.ui-sortable-placeholder {
+    border: 1px dashed #666;
+    visibility: visible !important;
+    opacity: 0.5;
+}
+
+#filtertabs {
+    margin-bottom: 16px;
+    border: 0;
+
+    @include respond-to(medium-screens) {
+        border-bottom: 1px solid #BBB;
+    }
+
+    a {
+        color: #666;
+        background-color: desaturate(lighten($boltblue, 60%), 30);
+        border: 1px solid #BBB;
+        cursor: pointer;
+        padding: 5px 12px;
+
+        &:hover {
+            color: #444;
+            background-color: #FFF !important;
+            border-bottom: 0;
+        }
+    }
+
+    li {
+        margin-left: -3px;
+
+        &.active {
+            margin-top: -5px;
+
+            a {
+                background-color: #F8F8F8;
+                color: #333;
+                padding: 7px 12px 8px 12px;
+            }
+        }
+    }
+}

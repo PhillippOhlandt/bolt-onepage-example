@@ -1,0 +1,14 @@
+{##
+ # Sidebar-Panel: Displays actions for users
+ #}
+{% extends '_base/_panel.twig' %}
+
+{% block panel_class 'panel-news' %}
+
+{% block panel_icon 'fa-cog' %}
+
+{% block panel_head __('users.actions-for-users') %}
+
+{% block panel_body %}
+<div class="span6" style="text-align:center"><a class="btn btn-primary" href="{{ path('useredit', {'id': ''}) }}">{{ __('panel.user-actions.button.add') }}</a></div>
+{% endblock panel_body %}

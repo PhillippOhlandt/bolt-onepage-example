@@ -1,0 +1,41 @@
+{# Empty array for submenu #}
+{% set sub = [] %}
+
+{% if isallowed('extensions||extensions:config') %}
+
+    {# Add the "view" and "configure" options #}
+    {% set sub = sub|merge([
+        {
+            icon: 'fa:cubes',
+            label: __('View/install Extensions'),
+            link: path('extend', {}),
+            isallowed: 'extensions'
+        },
+        {
+            icon: 'fa:cog',
+            label: __('Configure Extensions'),
+            link: path('files', {'namespace': 'config', 'path': 'extensions'}),
+            isallowed: 'extensions:config'
+        }
+    ]) %}
+
+    {# Add a divider, if there are any items to print. We don't want a divider with nothing below it #}
+    {% if app.extensions.getMenuoptions|length > 0 %}
+        {% set sub = sub|merge(['-']) %}
+    {% endif %}
+
+
+{% endif %}
+
+{# Add the available extensions that have added a menu-item. #}
+{% for extension in app.extensions.getMenuoptions %}
+    {% set sub = sub|merge([
+        {
+            icon: extension.icon|default('fa:briefcase'),
+            label: extension.label,
+            link: extension.path
+        }
+    ]) %}
+{% endfor %}
+
+{{ nav.submenu('fa:cubes', __('Extras'), sub, (page_nav == 'Settings/ExtendBolt')) }}

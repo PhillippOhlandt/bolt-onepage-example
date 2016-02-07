@@ -1,0 +1,145 @@
+{# Page: NavSecondary > Dashboard > Configuration > System Log #}
+
+{% extends '_base/_page-nav.twig' %}
+
+{% block page_nav 'Settings/Configuration' %}
+
+{% block page_title __('logs.system-log') %}
+
+{% block page_main %}
+
+    {% from '_macro/_pager.twig' import pager %}
+
+    {% import '_macro/_macro.twig' as macro %}
+
+    <div class="row">
+        <div class="col-xs-12">
+
+            <form class="form-inline" role="form">
+                <div class="form-group">
+                    <select class="form-control" name="level" id="level">
+                        <option value="">-- Level --</option>
+                        <option value="100">{{ 100|loglevel }}</option>
+                        <option value="200">{{ 200|loglevel }}</option>
+                        <option value="250">{{ 250|loglevel }}</option>
+                        <option value="300">{{ 300|loglevel }}</option>
+                        <option value="400">{{ 400|loglevel }}</option>
+                        <option value="500">{{ 500|loglevel }}</option>
+                        <option value="550">{{ 550|loglevel }}</option>
+                        <option value="600">{{ 600|loglevel }}</option>
+                    </select>
+                </div>
+
+                <div class="form-group">
+                    <select class="form-control" name="context" id="context">
+                        <option value="">-- Context --</option>
+                        <option value="authentication">authentication</option>
+                        <option value="config">config</option>
+                        <option value="content">content</option>
+                        <option value="cron">cron</option>
+                        <option value="deprecated">deprecated</option>
+                        <option value="exception">exception</option>
+                        <option value="news">news</option>
+                        <option value="nut">nut</option>
+                        <option value="security">security</option>
+                        <option value="storage">storage</option>
+                        <option value="template">template</option>
+                        <option value="translation">translation</option>
+                        <option value="twig">twig</option>
+                        <option value="upload">upload</option>
+                    </select>
+                </div>
+
+                <button type="submit" class="btn btn-secondary"> <!-- href="{{ path('systemlog', {'action': 'trim'}) }}"> -->
+                    <i class="fa fa-filter"></i> {{ __('Filter') }}
+                </button>
+
+                <div class="btn-group pull-right" style="padding-bottom: 12px">
+                    <a class="btn btn-default" href="{{ path('systemlog', {'action': 'trim'}) }}">
+                        <i class="fa fa-trash-o"></i> {{ __('Trim System Log') }}
+                    </a>
+                    <a class="btn btn-default confirm" href="{{ path('systemlog', {'action': 'clear'}) }}" data-confirm="Are you sure you want to clear the system logs?">
+                        <i class="fa fa-trash"></i> {{ __('Clear System Log') }}
+                    </a>
+                </div>
+            </form>
+
+            <table class="table table-striped dashboardlisting">
+                <thead>
+                    <tr>
+                        <th>№</th>
+                        <th>Type</th>
+                        <th>Context</th>
+                        <th>Route</th>
+                        <th>URI</th>
+                        <th>Details</th>
+                        <th>User</th>
+                        <th>IP</th>
+                        <th>Date</th>
+                    </tr>
+                </thead>
+                <tbody>
+                {% for entry in entries %}
+                    <tr>
+                        <td>
+                            {{ entry.id }}
+                        </td>
+                        <td>
+                            {{ entry.level|loglevel }}
+                        </td>
+                        <td>
+                            {{ entry.context }}
+                        </td>
+                        <td>
+                            {{ entry.route }}
+                        </td>
+                        <td>
+                            {{ entry.requesturi }}
+                        </td>
+                        <td>
+                            {% spaceless %}
+                            <b>{{ entry.message }}</b>
+                            {% if entry.source %}
+                            <span class="info-pop pull-right" style="background-color: inherit !important;"
+                                  data-content="{{ _self.trace_info_html(entry.source) }}"
+                                  data-html="true" >
+                                  <i class="fa fa-bug"></i>
+                            </span>
+                            {% endif %}
+                            {% endspaceless %}
+                        </td>
+                        <td>
+                            {% set user = getuser(entry.ownerid) %}
+                            {% if user is not empty %}
+                                {% set userlink = macro.userlink(user) %}
+                            {% else %}
+                                {% set userlink = __('panel.latest-activity.unknown') %}
+                            {% endif %}
+                            <em>{{ userlink }}</em>
+                        </td>
+                        <td>
+                            {{ entry.ip }}
+                        </td>
+                        <td>
+                            <time class="moment" datetime="{{ entry.date|date("c") }}" title="{{ entry.date }}">{{ entry.date }}</time>
+                        </td>
+                    </tr>
+                {% endfor %}
+                </tbody>
+            </table>
+
+            {{ pager() }}
+
+        </div>
+    </div>
+
+{% endblock page_main %}
+
+{% macro trace_info_html(source) %}
+    {% if source %}
+        {% set source = source|json_decode %}
+        {% for key,value in source %}
+            {{ key }}: {{ value }}<br>
+        {% endfor %}
+    {% endif %}
+{% endmacro %}

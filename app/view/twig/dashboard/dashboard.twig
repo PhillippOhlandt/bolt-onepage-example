@@ -1,0 +1,45 @@
+{# Page: NavSecondary > Dashboard #}
+
+{% extends '_base/_page-nav.twig' %}
+
+{% block page_nav 'Dashboard' %}
+
+{% block page_title __('page.dashboard.title') %}
+
+{# clear default messages, because we use them in a different spot, in this template #}
+{% block messages "" %}
+
+{% block page_main %}
+
+    <div class="row">
+        <div class="col-md-8">
+
+            {% include '_sub/_messages.twig' %}
+
+            {% if context.suggestloripsum %}
+                {% include 'dashboard/_suggestloripsum.twig' %}
+            {% endif %}
+
+            <div class="quicklinks">
+                {% if app.config.get('contenttypes')|length() > 3 %}
+                    {% include 'dashboard/_quicklinks-dropdown.twig' %}
+                {% else %}
+                    {% include 'dashboard/_quicklinks-buttons.twig' %}
+                {% endif %}
+            </div>
+
+            {% for contenttype, multiplecontent in context.latest %}
+                {% if multiplecontent %}
+                    {% include 'dashboard/_recently_edited.twig' %}
+                {% endif %}
+            {% endfor %}
+
+        </div>
+
+        <aside class="col-md-4">
+            {% include 'dashboard/_aside.twig' %}
+        </aside>
+
+    </div>
+
+{% endblock page_main %}

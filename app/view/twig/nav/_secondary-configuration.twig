@@ -1,0 +1,59 @@
+{% set sub = [
+    {
+        icon: 'fa:group',
+        label: __('Users & Permissions'),
+        link: path('users'),
+        isallowed: 'users'
+    }, {
+        icon: 'fa:cog',
+        label: __('Main configuration'),
+        link: path('fileedit', {'namespace': 'config', 'file': 'config.yml'}),
+        isallowed: 'files:config'
+    }, {
+        icon: 'fa:paint-brush',
+        label: __('Contenttypes'),
+        link: path('fileedit', {'namespace': 'config', 'file': 'contenttypes.yml'}),
+        isallowed: 'files:config'
+    }, {
+        icon: 'fa:tags',
+        label: __('Taxonomy'),
+        link: path('fileedit', {'namespace': 'config', 'file': 'taxonomy.yml'}),
+        isallowed: 'files:config'
+    },
+    '-',
+    {
+        icon: 'fa:list',
+        label: __('Menu setup'),
+        link: path('fileedit', {'namespace': 'config', 'file': 'menu.yml'}),
+        isallowed: 'files:config'
+    }, {
+        icon: 'fa:random',
+        label: __('menu.configuration.routing'),
+        link: path('fileedit', {'namespace': 'config', 'file': 'routing.yml'}),
+        isallowed: 'files:config'
+    },
+    '-',
+    {
+        icon: 'fa:database',
+        label: __('Check database'),
+        link: path('dbcheck'),
+        isallowed: 'dbupdate'
+    }, {
+        icon: 'fa:eraser',
+        label: __('Clear the cache'),
+        link: path('clearcache'),
+        isallowed: 'clearcache'
+    }, {
+        icon: 'fa:archive',
+        label: __('logs.change-log'),
+        link: path('changelog'),
+        isallowed: 'changelog'
+    }, {
+        icon: 'fa:archive',
+        label: __('logs.system-log'),
+        link: path('systemlog'),
+        isallowed: 'systemlog'
+    }
+] %}
+
+{{ nav.submenu('fa:cogs', __('Configuration'), sub, (page_nav == 'Settings/Configuration')) }}

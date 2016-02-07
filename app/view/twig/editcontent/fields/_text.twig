@@ -1,0 +1,52 @@
+{#=== OPTIONS ========================================================================================================#}
+
+{% set option = {
+    class:        field.class|default(''),
+    label:        field.label|default(''),
+    pattern:      field.pattern|default(''),
+    placeholder:  field.placeholder|default(''),
+    required:     field.required|default(false),
+    errortext:    field.error|default(''),
+    readonly:     field.readonly|default(false),
+    title:        field.title|default(''),
+    variant:      field.variant|default(''),
+    info:         field.info|default('')
+} %}
+{# variant[inline] #}
+
+{#=== INIT ===========================================================================================================#}
+
+{% set attr_text = {
+    class:          option.class,
+    name:           name,
+    id:             key,
+    pattern:        (option.pattern and option.pattern not in ['url', 'email']) ? option.pattern : '',
+    maxlength:      255,
+    placeholder:    option.placeholder,
+    required:       option.required,
+    data_errortext: option.errortext,
+    readonly:       option.readonly,
+    title:          option.title,
+    type:           (option.pattern in ['url', 'email']) ? option.pattern : 'text',
+    value:          context.content.get(contentkey),
+} %}
+
+{#=== FIELDSET =======================================================================================================#}
+
+<fieldset class="text">
+    {% if option.variant == 'inline' %}
+
+        <label class="col-sm-3 control-label">{{ (option.info) ? macro.infopop(labelkey, option.info) : labelkey }}</label>
+        <div class="col-sm-9">
+            <input{{ macro.attr(attr_text) }}>
+        </div>
+
+    {% else %}
+
+        <div class="col-sm-12">
+            <label class="control-label">{{ (option.info) ? macro.infopop(labelkey, option.info) : labelkey }}</label>
+            <input{{ macro.attr(attr_text) }}>
+        </div>
+
+    {% endif %}
+</fieldset>

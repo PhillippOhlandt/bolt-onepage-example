@@ -1,0 +1,31 @@
+{#=== OPTIONS ========================================================================================================#}
+
+{% set option = {
+    class:  field.class|default(''),
+    label:  field.label|default(''),
+    info:   field.info|default('')
+} %}
+
+{#=== INIT ===========================================================================================================#}
+
+{% set attr_checkbox = {
+    checked:  context.content.get(contentkey),
+    class:    option.class,
+    name:     name,
+    id:       key,
+    type:     'checkbox'
+} %}
+
+{#=== FIELDSET =======================================================================================================#}
+
+{# fieldset.checkbox already used: -> chkbox #}
+<fieldset class="checkbox">
+    <div class="col-sm-12">
+        <label class="col-sm-3 control-label" for="{{ key }}">
+            {{ (option.info) ? macro.infopop(labelkey, option.info) : labelkey }}
+        </label>
+        <label class="col-sm-9 control-label">
+            <input{{ macro.attr(attr_checkbox) }}>
+        </label>
+    </div>
+</fieldset>
