@@ -1,0 +1,47 @@
+templatefields:
+    hero.twig: # Our homepage template
+        headline:
+            type: text
+            class: large
+        content:
+            type: html
+            height: 200px
+    calltoaction.twig:
+        headline:
+            type: text
+            class: large
+        content:
+            type: html
+            height: 200px
+        style:
+            type: select
+            values: [ light, dark, bubble, block, mage ]
+    threeentriesfeature.twig:
+        headline:
+            type: text
+            class: large
+        entry_1:
+            type: select
+            values: entries/id,title
+            autocomplete: true
+            sort: title
+        entry_2:
+            type: select
+            values: entries/id,title
+            autocomplete: true
+            sort: title
+        entry_3:
+            type: select
+            values: entries/id,title
+            autocomplete: true
+            sort: title
+
+templateselect:
+    templates:
+        - filename: "hero.twig"
+          name: "Hero"
+        - filename: "calltoaction.twig"
+          name: "Call to Action"
+        - filename: "threeentriesfeature.twig"
+          name: "3 featured entries"
+
